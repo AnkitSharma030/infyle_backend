@@ -62,7 +62,10 @@ router.get(
       { expiresIn: "7d" }
     );
     // Redirect to frontend with token
-    res.redirect(`http://localhost:3000/auth/callback?token=${token}`);
+    const frontendURL = process.env.FRONTEND_URL;
+
+    res.redirect(`${frontendURL}/auth/callback?token=${token}`);
+
   }
 );
 

@@ -4,6 +4,7 @@ import Vendor from "../models/Vendor.js";
 import jwt from "jsonwebtoken";
 
 const router = express.Router();
+import passport from "passport";
 
 // Vendor Signup
 router.post("/signup", async (req, res) => {
@@ -41,6 +42,42 @@ router.post("/signup", async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ message: "Signup failed" });
+  }
+});
+
+// Google Auth
+router.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+router.get(
+  "/auth/google/callback",
+  passport.authenticate("google", { session: false, failureRedirect: "/" }),
+  (req, res) => {
+    // Determine redirect logic
+    const token = jwt.sign(
+      { id: req.user._id, role: req.user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+    // Redirect to frontend with token
+    res.redirect(`http://localhost:3000/auth/callback?token=${token}`);
+  }
+);
+
+// Get Current User (for OAuth callback)
+router.get("/me", async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return res.status(401).json({ message: "Unauthorized" });
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const vendor = await Vendor.findById(decoded.id);
+
+    res.json(vendor);
+  } catch (error) {
+    res.status(401).json({ message: "Invalid token" });
   }
 });
 

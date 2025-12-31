@@ -15,6 +15,7 @@ This is a full-stack MERN application (MongoDB, Express.js, React.js, Node.js) d
 ### Backend
 - **Node.js & Express.js**: RESTful API server.
 - **MongoDB & Mongoose**: NoSQL database and object modeling.
+- **Cloudinary**: Cloud-based image storage and management.
 - **Authentication**:
     - **Passport.js**: Google OAuth strategy.
     - **JWT (JSON Web Tokens)**: Secure session handling.
@@ -26,6 +27,7 @@ This is a full-stack MERN application (MongoDB, Express.js, React.js, Node.js) d
 - Node.js (v14+)
 - MongoDB (Local or Atlas)
 - Google Cloud Console Project (for OAuth keys)
+- Cloudinary Account (for image uploads)
 
 ### Backend Setup
 1. Navigate to the backend directory:
@@ -45,6 +47,9 @@ This is a full-stack MERN application (MongoDB, Express.js, React.js, Node.js) d
    BACKEND_URL=http://localhost:5000
    GOOGLE_CLIENT_ID=your_google_client_id
    GOOGLE_CLIENT_SECRET=your_google_client_secret
+   CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+   CLOUDINARY_API_KEY=your_cloudinary_api_key
+   CLOUDINARY_API_SECRET=your_cloudinary_api_secret
    ```
 4. Start the server:
    ```bash
@@ -79,7 +84,7 @@ This is a full-stack MERN application (MongoDB, Express.js, React.js, Node.js) d
 - **GET /me**: Get current authenticated user details.
 
 ### Products (`/api/product`)
-- **POST /add**: Submit a new product (Vendor only). Requires `name`, `description`, `price`, `category`, and `image` (optional).
+- **POST /add**: Submit a new product (Vendor only). Requires `name`, `description`, `price`, `category`, and `image` (base64 encoded, optional). Images are automatically uploaded to Cloudinary.
 - **GET /vendor/:vendorId**: Fetch all products submitted by a specific vendor.
 
 ### Admin (`/api/admin`)
@@ -101,7 +106,7 @@ The application uses strict route protection mechanisms to ensure data security:
 /
 ├── backend/            # Express.js Server
 │   ├── src/
-│   │   ├── config/     # Passport & DB config
+│   │   ├── config/     # Passport, DB & Cloudinary config
 │   │   ├── models/     # Mongoose Schemas (Vendor, Product)
 │   │   ├── routes/     # API Routes
 │   │   ├── middlewares/# Auth & Access Control

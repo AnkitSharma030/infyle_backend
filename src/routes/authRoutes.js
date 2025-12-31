@@ -29,15 +29,9 @@ router.post("/signup", async (req, res) => {
       phone,
     });
 
-    const token = jwt.sign(
-      { id: vendor._id, role: vendor.role },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
 
     res.status(201).json({
       message: "Signup successful",
-      token,
       vendor,
     });
   } catch (error) {

@@ -18,8 +18,6 @@ passport.use(
                 let vendor = await Vendor.findOne({ email: profile.emails[0].value });
 
                 if (vendor) {
-                    // If vendor exists but provider is different (e.g. local), we might want to link or just return user
-                    // For simplicity, we stick to the existing vendor
                     return done(null, vendor);
                 }
 
@@ -27,8 +25,8 @@ passport.use(
                 vendor = await Vendor.create({
                     name: profile.displayName,
                     email: profile.emails[0].value,
-                    password: "", // No password for OAuth users
-                    phone: "0000000000", // Placeholder or ask user later
+                    password: "",
+                    phone: "0000000000",
                     oauthProvider: "google",
                     role: "vendor",
                 });
